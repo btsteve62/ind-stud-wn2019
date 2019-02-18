@@ -6,6 +6,24 @@ import matplotlib.pyplot as pp
 
 from sklearn.preprocessing import MinMaxScaler
 from model import *
+from algorithm import *
+
+
+
+# requires start < stop
+def frange(start, stop, elts):
+
+    vals = []
+    size = stop - start
+    step = size / elts
+
+    i = start
+    while i <= stop:
+        vals.append(i)
+        i += step
+
+    return vals
+
 
 
 def calc_plot_cdf(predUnad, predOG, z, trainSplit):
@@ -65,14 +83,20 @@ def calc_plot_cdf(predUnad, predOG, z, trainSplit):
     yOG0cdf = np.cumsum(yOG0)
     yOG1cdf = np.cumsum(yOG1)
 
+    # as in Aliverti et al, plot between [-20, 50]
+    x0Unad = frange(-20, 50, len(yUnad0cdf))
+    x1Unad = frange(-20, 50, len(yUnad1cdf))
+    x0OG = frange(-20, 50, len(yOG0cdf))
+    x1OG = frange(-20, 50, len(yOG1cdf))
+
     pp.subplot(2,1,1)
-    pp.plot(yUnad0cdf)
-    pp.plot(yUnad1cdf)
+    pp.plot(x0Unad, yUnad0cdf)
+    pp.plot(x1Unad, yUnad1cdf)
     pp.title("CDF of unadjusted predictions (separated by class z)")
 
     pp.subplot(2,1,2)
-    pp.plot(yOG0cdf)
-    pp.plot(yOG1cdf)
+    pp.plot(x0OG, yOG0cdf)
+    pp.plot(x1OG, yOG1cdf)
     pp.title("CDF of OG adjusted predictions (separated by class z)")
 
     pp.show()
@@ -80,8 +104,42 @@ def calc_plot_cdf(predUnad, predOG, z, trainSplit):
     return
 
 
-def calc_plot_fnorm_of_re(x, kStart, kEnd):
+def calc_plot_fnorm_of_re(x, z, kStart, kEnd):
 
-    return x
+    # find fnorm of x
+    # for k in (kStart, kEnd): get svd(X), get xTil
+    #   for each approximation: map k-val to fnorm of (x - xApprox)
+    # plot: x = kVal, y = (fnorm of difference / fnorm of x)
+
+    normX = np.linalg.norm(x, ord='fro')
+
+    cont = {}
+    for k in range(kStart, kEnd+1):
+
+        v, sigma, uT = np.linalg.svd(x, full_matrices=False)
+        sigma = np.diag(sigma)
+        if k < len(sigma):
+            for i in range(k, len(sigma)):
+                sigma[i][i] = 0
+        xSvd = v @ sigma @ uT
+
+        xTil = aliverti_x_til(x, k, z)
+
+        normDiffSvd = np.linalg.norm((x-xSvd), ord='fro')
+        normDiffxTil = np.linalg.norm((x-xTil), ord='fro')
+
+        cont[k] = [normDiffSvd, normDiffxTil]
+
+        pp.plot(k, (normDiffSvd / normX))
+        pp.plot(k, (normDiffxTil / normX))
+
+    pp.show()
+
+    return cont
 
 
+
+# STILL NEED:
+
+# classification error, AUC, Total Positive Rate, Total Negative Rate,
+# False Negative Rate, False Positive Rate

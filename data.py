@@ -126,5 +126,7 @@ if __name__ == "__main__":
     rfPred_OG = rf_model(xTil, y, trainSplit)
     rfPred_Unadjusted = rf_model(x, y, trainSplit)
 
-    calc_plot_cdf(logPred_Unadjusted, logPred_OG, z, trainSplit)
+    # calc_plot_cdf(logPred_Unadjusted, logPred_OG, z, trainSplit)
     # calc_plot_cdf(rfPred_Unadjusted, rfPred_OG, z, trainSplit)
+
+    calc_plot_fnorm_of_re(x, z, 2, 20)

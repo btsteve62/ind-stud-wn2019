@@ -36,8 +36,8 @@ if __name__ == "__main__":
     # classifStats_RfUnad= get_classification_stats(yTest, rfPred_Unadjusted)
     # classifStats_RfOg = get_classification_stats(yTest, rfPred_Og)
 
-    auc_LogUnad = get_auc(y, logPred_Unadjusted)
-    auc_LogOg = get_auc(y, logPred_Og)
+    auc_LogUnad = get_auc(yTest, logPred_Unadjusted)
+    auc_LogOg = get_auc(yTest, logPred_Og)
 
     # calc_plot_cdf(logPred_Unadjusted, logPred_Og, z)
     # calc_plot_cdf(rfPred_Unadjusted, rfPred_Og, z)

@@ -1,5 +1,3 @@
-import pandas as pd
-
 from data import  *
 from model import *
 from analysis import *
@@ -30,12 +28,17 @@ if __name__ == "__main__":
     rfPred_Og = rf_model(xTil, y, trainSplit)
     rfPred_Unadjusted = rf_model(x, y, trainSplit)
 
-    # calc_plot_cdf(logPred_Unadjusted, logPred_Og, z, trainSplit)
-    # calc_plot_cdf(rfPred_Unadjusted, rfPred_Og, z, trainSplit)
+    # this is the set of y's used in the training set (last (1-trainSplit)% of y)
+    yTest = get_test_subset(y, trainSplit)
 
+    classifStats_LogUnad = get_classification_stats(yTest, logPred_Unadjusted)
+    classifStats_LogOg = get_classification_stats(yTest, logPred_Og)
+    # classifStats_RfUnad= get_classification_stats(yTest, rfPred_Unadjusted)
+    # classifStats_RfOg = get_classification_stats(yTest, rfPred_Og)
+
+    auc_LogUnad = get_auc(y, logPred_Unadjusted)
+    auc_LogOg = get_auc(y, logPred_Og)
+
+    # calc_plot_cdf(logPred_Unadjusted, logPred_Og, z)
+    # calc_plot_cdf(rfPred_Unadjusted, rfPred_Og, z)
     # calc_plot_fnorm_of_re(x, z, 2, 20)
-
-    classifStats_LogUnad = get_classification_stats(y, logPred_Unadjusted, trainSplit)
-    classifStats_LogOg = get_classification_stats(y, logPred_Og, trainSplit)
-    # classifStats_RfUnad= get_classification_stats(y, rfPred_Unadjusted, trainSplit)
-    # classifStats_RfOg = get_classification_stats(y, rfPred_Og, trainSplit)

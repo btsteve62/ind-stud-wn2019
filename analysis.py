@@ -1,7 +1,4 @@
 import math
-import pandas
-import scipy
-import numpy as np
 import matplotlib.pyplot as pp
 import sklearn.metrics as stats
 
@@ -25,7 +22,7 @@ def frange(start, stop, elts):
 
 
 
-def calc_plot_cdf(predUnad, predOG, z, trainSplit):
+def calc_plot_cdf(predUnad, predOG, z):
 
     #   OUTLINE:
     # get appropriate z's
@@ -33,9 +30,6 @@ def calc_plot_cdf(predUnad, predOG, z, trainSplit):
     # separate y[i] based on value of z[i]
     # standardize predictions y0, y1, yTil0, yTil1
     # plot unadjusted y0 and y1, then plot OG yTil0, yTil1
-
-    idx = math.ceil(len(z) * (1 - trainSplit))
-    z = z[len(z)-idx : len(z)]
 
     #######################################################
     # sanity check
@@ -139,12 +133,9 @@ def calc_plot_fnorm_of_re(x, z, kStart, kEnd):
 
 
 
-def get_classification_stats(yUnad, yPred, trainSplit):
+def get_classification_stats(yUnad, yPred):
 
-    idx = math.ceil(len(yUnad) * (1 - trainSplit))
-    y = yUnad[len(yUnad)-idx : len(yUnad)]
-
-    temp = stats.confusion_matrix(y, yPred)
+    temp = stats.confusion_matrix(yUnad, yPred)
 
     truePosRate = temp[0][0]
     trueNegRate = temp[1][1]

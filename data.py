@@ -1,3 +1,4 @@
+import math
 import pandas as pd
 
 from algorithm import *
@@ -8,6 +9,15 @@ def import_csv(filename):
 
     data = pd.read_csv(filename)
     return pd.DataFrame(data)
+
+
+
+def get_test_subset(y, trainSplit):
+
+    idx = math.ceil(len(y) * (1 - trainSplit))
+    y = y[len(y) - idx: len(y)]
+
+    return y
 
 
 

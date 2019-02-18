@@ -45,5 +45,6 @@ def rf_model(data, y, trainingSplit):
 
     rfReg.fit(xtrain, ytrain)
     predictions = rfReg.predict(xtest)
+    scores = rfReg.predict
 
     return predictions

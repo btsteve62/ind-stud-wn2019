@@ -103,6 +103,7 @@ def calc_plot_cdf(predUnad, predOG, z, trainSplit):
     return
 
 
+
 def calc_plot_fnorm_of_re(x, z, kStart, kEnd):
 
     # find fnorm of x
@@ -138,11 +139,6 @@ def calc_plot_fnorm_of_re(x, z, kStart, kEnd):
 
 
 
-# STILL NEED:
-
-# classification error, Total Positive Rate, Total Negative Rate,
-# False Negative Rate, False Positive Rate, AUC
-
 def get_classification_stats(yUnad, yPred, trainSplit):
 
     idx = math.ceil(len(yUnad) * (1 - trainSplit))
@@ -159,3 +155,11 @@ def get_classification_stats(yUnad, yPred, trainSplit):
                        (truePosRate+trueNegRate+falsePosRate+falseNegRate)
 
     return [truePosRate, trueNegRate, falsePosRate, falseNegRate, classifErrRt]
+
+
+
+def get_auc(yUnad, yPred):
+
+    falsePosRt, truePosRt, thresholds = stats.roc_curve(yUnad, yPred)
+    area = stats.auc(falsePosRt, truePosRt)
+    return area

@@ -3,9 +3,8 @@ import pandas
 import scipy
 import numpy as np
 import matplotlib.pyplot as pp
+import sklearn.metrics as stats
 
-from sklearn.preprocessing import MinMaxScaler
-from model import *
 from algorithm import *
 
 
@@ -36,7 +35,7 @@ def calc_plot_cdf(predUnad, predOG, z, trainSplit):
     # plot unadjusted y0 and y1, then plot OG yTil0, yTil1
 
     idx = math.ceil(len(z) * (1 - trainSplit))
-    z = z[0:idx]
+    z = z[len(z)-idx : len(z)]
 
     #######################################################
     # sanity check
@@ -141,5 +140,22 @@ def calc_plot_fnorm_of_re(x, z, kStart, kEnd):
 
 # STILL NEED:
 
-# classification error, AUC, Total Positive Rate, Total Negative Rate,
-# False Negative Rate, False Positive Rate
+# classification error, Total Positive Rate, Total Negative Rate,
+# False Negative Rate, False Positive Rate, AUC
+
+def get_classification_stats(yUnad, yPred, trainSplit):
+
+    idx = math.ceil(len(yUnad) * (1 - trainSplit))
+    y = yUnad[len(yUnad)-idx : len(yUnad)]
+
+    temp = stats.confusion_matrix(y, yPred)
+
+    truePosRate = temp[0][0]
+    trueNegRate = temp[1][1]
+    falsePosRate = temp[0][1]
+    falseNegRate = temp[1][0]
+
+    classifErrRt = (falsePosRate+falseNegRate) / \
+                       (truePosRate+trueNegRate+falsePosRate+falseNegRate)
+
+    return [truePosRate, trueNegRate, falsePosRate, falseNegRate, classifErrRt]

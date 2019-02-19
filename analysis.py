@@ -77,10 +77,10 @@ def calc_plot_cdf(predUnad, predOG, z):
     yOG1cdf = np.cumsum(yOG1)
 
     # as in Aliverti et al, plot between [-20, 50]
-    x0Unad = frange(-20, 50, len(yUnad0cdf))
-    x1Unad = frange(-20, 50, len(yUnad1cdf))
-    x0OG = frange(-20, 50, len(yOG0cdf))
-    x1OG = frange(-20, 50, len(yOG1cdf))
+    x0Unad = frange(-20, 49, len(yUnad0cdf))
+    x1Unad = frange(-20, 48, len(yUnad1cdf))
+    x0OG = frange(-20, 49, len(yOG0cdf))
+    x1OG = frange(-20, 48, len(yOG1cdf))
 
     pp.subplot(2,1,1)
     pp.plot(x0Unad, yUnad0cdf)

@@ -30,6 +30,7 @@ if __name__ == "__main__":
 
     # this is the set of y's used in the training set (last (1-trainSplit)% of y)
     yTest = get_test_subset(y, trainSplit)
+    zTest = get_test_subset(z, trainSplit)
 
     classifStats_LogUnad = get_classification_stats(yTest, logPred_Unadjusted)
     classifStats_LogOg = get_classification_stats(yTest, logPred_Og)
@@ -39,6 +40,6 @@ if __name__ == "__main__":
     auc_LogUnad = get_auc(yTest, logPred_Unadjusted)
     auc_LogOg = get_auc(yTest, logPred_Og)
 
-    # calc_plot_cdf(logPred_Unadjusted, logPred_Og, z)
-    # calc_plot_cdf(rfPred_Unadjusted, rfPred_Og, z)
-    # calc_plot_fnorm_of_re(x, z, 2, 20)
+    calc_plot_cdf(logPred_Unadjusted, logPred_Og, zTest)
+    # calc_plot_cdf(rfPred_Unadjusted, rfPred_Og, zTest)
+    # calc_plot_fnorm_of_re(x, zTest, 2, 20)

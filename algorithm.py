@@ -1,7 +1,9 @@
 import numpy as np
 
 
-
+#######
+# currently requires 1-dimensional Z vector
+#######
 def aliverti_x_til(X, k, Z):
 
     v, sigma, uT = np.linalg.svd(X, full_matrices=False)
@@ -10,7 +12,7 @@ def aliverti_x_til(X, k, Z):
     # found from the sigma matrix of a rank-k SVD by keeping the top k values
     # in sigma and setting the rest to zero (hard thresholding)
 
-    # this also takes care of the rank-reduction in x_tilde ;)
+    # this also takes care of the rank-reduction in x_tilde
 
     sigma = np.diag(sigma)
     if k < len(sigma):
@@ -19,8 +21,8 @@ def aliverti_x_til(X, k, Z):
 
     ztz = np.dot(Z.transpose(), Z)
     ztzInv = 1/ztz
-    temp = np.dot(Z, ztzInv)
-    pZ = np.dot(temp, Z.transpose())
+    temp = Z * ztzInv
+    pZ = temp @ Z.transpose()
 
     n = v.shape[0]
     i = np.eye(n)

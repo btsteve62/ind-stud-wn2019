@@ -22,7 +22,7 @@ def frange(start, stop, elts):
 
 
 
-def calc_plot_cdf(predUnad, predOG, z):
+def calc_plot_cdf(unadProbs, ogProbs, z):
 
     #   OUTLINE:
     # get appropriate z's
@@ -31,66 +31,41 @@ def calc_plot_cdf(predUnad, predOG, z):
     # standardize predictions y0, y1, yTil0, yTil1
     # plot unadjusted y0 and y1, then plot OG yTil0, yTil1
 
-    #######################################################
-    # sanity check
-    if (len(z) != len(predUnad)) or (len(z) != len(predOG)):
-        print("error: lengths of z, predictions, and x's don't match")
-        print("Unadjusted pred:")
-        print(len(predUnad))
-        print("OG pred:")
-        print(len(predOG))
-        print("Z:")
-        print(len(z))
-        assert(1 == 0)
-    #######################################################
+    # just choose one set of probs; probability of class 1 (predict will reoffend)
+    unadProbs = unadProbs[:,1]
+    ogProbs = ogProbs[:,1]
 
-    yUnad0 = []
-    yUnad1 = []
-    yOG0 = []
-    yOG1 = []
+    # split each according to z value
+    unadProbsZ0 = []
+    ogProbsZ0 = []
+    unadProbsZ1 = []
+    ogProbsZ1 = []
 
     for i in range(len(z)):
 
         if z[i] == 1:
-            yUnad1.append(predUnad[i])
-            yOG1.append(predOG[i])
+            unadProbsZ1.append(unadProbs[i])
+            ogProbsZ1.append(ogProbs[i])
         else:
-            yUnad0.append(predUnad[i])
-            yOG0.append(predOG[i])
+            unadProbsZ0.append(unadProbs[i])
+            ogProbsZ0.append(ogProbs[i])
 
-    tot = sum(yUnad0)
-    for i in range(len(yUnad0)):
-        yUnad0[i] = yUnad0[i] / tot
-    tot = sum(yUnad1)
-    for i in range(len(yUnad1)):
-        yUnad1[i] = yUnad1[i] / tot
-    tot = sum(yOG0)
-    for i in range(len(yOG0)):
-        yOG0[i] = yOG0[i] / tot
-    tot = sum(yOG1)
-    for i in range(len(yOG1)):
-        yOG1[i] = yOG1[i] / tot
+    unadProbsZ0 = np.sort(unadProbsZ0)
+    unadProbsZ1 = np.sort(unadProbsZ1)
+    ogProbsZ0 = np.sort(ogProbsZ0)
+    ogProbsZ1 = np.sort(ogProbsZ1)
 
-    yUnad0cdf = np.cumsum(yUnad0)
-    yUnad1cdf = np.cumsum(yUnad1)
-    yOG0cdf = np.cumsum(yOG0)
-    yOG1cdf = np.cumsum(yOG1)
+    print(unadProbsZ0)
 
-    # as in Aliverti et al, plot between [-20, 50]
-    x0Unad = frange(-20, 49, len(yUnad0cdf))
-    x1Unad = frange(-20, 48, len(yUnad1cdf))
-    x0OG = frange(-20, 49, len(yOG0cdf))
-    x1OG = frange(-20, 48, len(yOG1cdf))
 
-    pp.subplot(2,1,1)
-    pp.plot(x0Unad, yUnad0cdf)
-    pp.plot(x1Unad, yUnad1cdf)
+    pp.subplot(2, 1, 1)
     pp.title("CDF of unadjusted predictions (separated by class z)")
-
-    pp.subplot(2,1,2)
-    pp.plot(x0OG, yOG0cdf)
-    pp.plot(x1OG, yOG1cdf)
-    pp.title("CDF of OG adjusted predictions (separated by class z)")
+    pp.plot(unadProbsZ0, np.linspace(0., 1., len(unadProbsZ0)))
+    pp.plot(unadProbsZ1, np.linspace(0., 1., len(unadProbsZ1)))
+    pp.subplot(2, 1, 2)
+    pp.title("Top is from unadjusted predictors, bottom is using OG preprocessing")
+    pp.plot(ogProbsZ0, np.linspace(0., 1., len(ogProbsZ0)))
+    pp.plot(ogProbsZ1, np.linspace(0., 1., len(ogProbsZ1)))
 
     pp.show()
 

@@ -22,8 +22,13 @@ def logistic_model(data, y, trainingSplit):
 
     logReg.fit(xtrain, ytrain)
     predictions = logReg.predict(xtest)
+    probabilities = logReg.predict_proba(xtest)
+    # probabilities = logReg.predict_log_proba(xtest)
 
-    return predictions
+    # print(logReg.classes_)
+    # print(probabilities)
+
+    return [predictions, probabilities]
 
 
 

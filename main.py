@@ -16,37 +16,47 @@ if __name__ == "__main__":
     reducedRanK = 10
 
     data = pd.read_csv(file_to_open)
-    hamburgers = data_preparation(data, z, y)
-    dataColNames = hamburgers[1]
-
-    x = hamburgers[0].to_numpy()
-    y = hamburgers[3]
-    z = hamburgers[2]
 
 
-    xTil = generate_XTil(x, algorithm, reducedRanK, z)
+    matrices = construct_aliverti_x(data, y, z)
+    xWithoutZ = matrices[0]
+    # xWithZ = matrices[1]
+
+    print(xWithoutZ)
+    print(type(xWithoutZ))
+    print(xWithoutZ.shape)
 
 
-    # this is the set of y's used in the training set (last (1-trainSplit)% of y)
-    yTest = get_test_subset(y, trainSplit)
-    zTest = get_test_subset(z, trainSplit)
+    # hamburgers = data_preparation(data, y, z)
+    # dataColNames = hamburgers[1]
+
+    # x = hamburgers[0].to_numpy()
+    # y = hamburgers[3]
+    # z = hamburgers[2]
+
+
+    # xTil = generate_XTil(x, algorithm, reducedRanK, z)
+
+
+    # # this is the set of y's used in the training set (last (1-trainSplit)% of y)
+    # yTest = get_test_subset(y, trainSplit)
+    # zTest = get_test_subset(z, trainSplit)
 
 
 
     # outputs of logistic_model() are [class predictions, pre-logit probs]
     # ---> PRE-LOGIT PROBABILITIES IS A Nx2 MATRIX; ROW i = [prob(0), prob(1)]
 
-    logisticOutputOg = logistic_model(xTil, y, trainSplit)
-    logisticOutputUnad = logistic_model(x, y, trainSplit)
+    # logisticOutputOg = logistic_model(xTil, y, trainSplit)
+    # logisticOutputUnad = logistic_model(x, y, trainSplit)
     # rfPred_Og = rf_model(xTil, y, trainSplit)
     # rfPred_Unadjusted = rf_model(x, y, trainSplit)
 
     # print(logisticOutputOg)
 
-    calc_plot_cdf(logisticOutputUnad[1], logisticOutputOg[1], zTest)
+    # calc_plot_cdf(logisticOutputUnad[1], logisticOutputOg[1], zTest)
     # calc_plot_cdf(rfPred_Unadjusted, rfPred_Og, zTest)
     # calc_plot_fnorm_of_re(x, zTest, 2, 20)
-
 
 
 

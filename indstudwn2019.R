@@ -47,25 +47,43 @@ aliverti_x_tilde <- function(X, Z, k)
 # ---REQUIRES THAT ENTRIES IN PARAMETERS CORRESPOND TO THE SAME OBSERVATIONS---
 plot_empirical_class_cdf <- function(model.probs, z)
 {
-  prob0 = matrix(nrow = length(model.probs), ncol = 1)
-  prob1 = matrix(nrow = length(model.probs), ncol = 1)
+  len = length(model.probs)
+  prob0 = matrix(nrow = len, ncol = 1)
+  prob1 = matrix(nrow = len, ncol = 1)
   
-  for (i in 1:nrow(z)){
-    if (z[i,] == 1) {
-      prob1[i,] = model.probs[i]
+  # split by classification
+  for (i in 1:nrow(z.trainSet)){
+    if (z.trainSet[i,] == 1) {
+      prob1[i] = model.probs[i]
     }
     else {
-      prob0[i,] = model.probs[i]
+      prob0[i] = model.probs[i]
     }
   }
-  
+  # get the sum of each vector
+  prob0 = na.omit(prob0)
+  prob1 = na.omit(prob1)
+  sum0 = sum(prob0)
+  sum1 = sum(prob1)
+  # divide each element by the sum of elements
+  prob0 = prob0 / sum0
+  prob1 = prob1 / sum1
+  # sort from smallest to largest (necessary?)
   prob0 = sort(prob0, decreasing = F)
   prob1 = sort(prob1, decreasing = F)
   
-  plot(prob0, pch = 20, col = 'blue')
-  lines(prob0, pch = 20, col = 'blue')
+  # cdf is a probability of getting a value less than or equal to some threshold
+  # => each probability is a sum of preceeding individual probabilities
+  for (i in 2:length(prob0)){
+    prob0[i] = prob0[i] + prob0[i-1]
+  }
+  for (i in 2:length(prob1)){
+    prob1[i] = prob1[i] + prob1[i-1]
+  }
+  plot(prob0, pch = 20, col = 'blue', ylab = "ecdf")
   points(prob1, pch = 20, col = 'red')
-  lines(prob1, pch = 20, col = 'red')
+  legend("topleft", c("black", "white"), 
+         col = c("blue", "red"), pch = c(20, 20))
 }
 
 
@@ -234,8 +252,8 @@ for (i in 1:nrow(z.trainSet)){
 
 
 # check ecdf and error statistics between models and races
-plot_empirical_class_cdf(xunad.log.probs, z.trainSet)
-plot_empirical_class_cdf(xtil.log.probs, z.trainSet)
+# plot_empirical_class_cdf(xunad.log.probs, z.trainSet)
+# plot_empirical_class_cdf(xtil.log.probs, z.trainSet)
 xunad.black.errorstats = get_error_statistics(y.black.trainset, 
                                               xunad.black.logpred, 
                                               xunad.black.logprob)
@@ -248,6 +266,16 @@ xunad.white.errorstats = get_error_statistics(y.white.trainset,
 xtil.white.errorstats = get_error_statistics(y.white.trainset, 
                                              xtil.white.logpred, 
                                              xtil.white.logprob)
+
+
+
+
+
+
+
+
+
+
 
 
 
